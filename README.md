@@ -14,6 +14,7 @@ parameters described bellow
 
 ### Services configuration
 Each hash with parameters can contain the following fields:
+
 - `service_name` - string with the name for systemd service if it is needed to be different from the key pointing to this configuration
 - `config` - hash in format `key: value` with all necessary configuration directives for Opendkim. This configuration will be saved
 to file /etc/opendkim/`service_name`.conf
@@ -28,7 +29,7 @@ Key of the hash is the path name of the file relative to `base_path`. The value 
   - `databag` - name of the databag or vault
   - `item` - name of the item in databag or vault
   - `mode` - optional, defaults to `0640`, access mode for the file
-- `config_files` - optional, hash with keys and other additional files which provided directly via attributes.
+- `config_files` - optional, hash with keys and other additional files which provided directly via attributes.  
 Key of the hash is the path name of the file relative to `base_path`. The value can be string, array or hash of `key: value` pairs.
 String is directly placed to the file, array represents multiline file with each element is a separate file line, each hash pair
 will be placed to separate file line, key/value separator is space.
