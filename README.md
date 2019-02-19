@@ -71,7 +71,7 @@ will be placed to separate file line, key/value separator is space.
           "SigningTable":     "refile:/etc/opendkim/SigningTable",
           "SignatureAlgorithm": "rsa-sha256",
         },
-        config_files: {
+        "config_files": {
           "TrustedHosts": ["127.0.0.1", "::1"],
           "KeyTable": {
             "default._domainkey.example.com": "example.com:default:/etc/opendkim/keys/example.private",
@@ -82,7 +82,7 @@ will be placed to separate file line, key/value separator is space.
             "*@test.com": "default._domainkey.test.com"
           }
         },
-        databag_files: {
+        "databag_files": {
           "keys/example.private": {
             "databag": "dkimkeys",
             "item": "example",
