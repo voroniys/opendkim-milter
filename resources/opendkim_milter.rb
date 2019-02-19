@@ -64,9 +64,16 @@ action :deploy do
     subscribes :restart, "template[#{new_resource.service_name}_config]"
   end
   if property_is_set?(:databag_files)
-    new_resource.databag_files.each do |path, prop|
-      file "#{new_resource.service_name}_#{path}" do
-        path "#{new_resource.base_path}/#{path}"
+    new_resource.databag_files.each do |file_path, prop|
+      directory "#{file_path}_directory" do
+        path ::File.dirname("#{new_resource.base_path}/#{file_path}")
+        mode '0750'
+        owner new_resource.owner
+        group new_resource.group
+        recursive true
+      end
+      file "#{new_resource.service_name}_#{file_path}" do
+        path "#{new_resource.base_path}/#{file_path}"
         if ChefVault::Item.vault?(prop['databag'], prop['item'])
           content chef_vault_item(prop['databag'], prop['item'])
         else
@@ -80,7 +87,14 @@ action :deploy do
     end
   end
   if property_is_set?(:config_files)
-    new_resource.config_files.each do |path, prop|
+    new_resource.config_files.each do |file_path, prop|
+      directory "#{file_path}_directory" do
+        path ::File.dirname("#{new_resource.base_path}/#{file_path}")
+        mode '0750'
+        owner new_resource.owner
+        group new_resource.group
+        recursive true
+      end
       file_content = ''
       if prop.is_a?(Array)
         file_content = prop.join("\n")
@@ -91,8 +105,8 @@ action :deploy do
       else
         file_content = prop
       end
-      file "#{new_resource.service_name}_#{path}" do
-        path "#{new_resource.base_path}/#{path}"
+      file "#{new_resource.service_name}_#{file_path}" do
+        path "#{new_resource.base_path}/#{file_path}"
         content file_content
         mode '0640'
         owner new_resource.owner
