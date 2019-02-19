@@ -8,8 +8,8 @@ Unlike many other implementations this one allows full flexibility in configurat
 multiple instances of Opendkim - for instance signer and verifier as separate instances.
 
 ## Attributes
-`node['opendkim-milter']['package']` - name of the package to be installed. Defaults to `opendkim` and normaly doesn't need to be changed
-`node['opendkim-milter']['services']` - hash with configuration for milters. Key of the hash is the name of the service, the hash with
+- `node['opendkim-milter']['package']` - name of the package to be installed. Defaults to `opendkim` and normaly doesn't need to be changed
+- `node['opendkim-milter']['services']` - hash with configuration for milters. Key of the hash is the name of the service, the hash with
 parameters described bellow
 
 ### Services configuration
