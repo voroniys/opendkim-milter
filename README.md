@@ -14,21 +14,21 @@ parameters described bellow
 
 ### Services configuration
 Each hash with parameters can contain the following fields:
-`service_name` - string with the name for systemd service if it is needed to be different from the key pointing to this configuration
-`config` - hash in format `key: value` with all necessary configuration directives for Opendkim. This configuration will be saved
+- `service_name` - string with the name for systemd service if it is needed to be different from the key pointing to this configuration
+- `config` - hash in format `key: value` with all necessary configuration directives for Opendkim. This configuration will be saved
 to file /etc/opendkim/`service_name`.conf
-`base_path` - optional, defaults to `/etc/opendkim`. Gives a possibility to choose another location for configuration files.
-`user_targets` - array, optional, allows to specify additional systemd targets that needs to be started before opendkim service. 
+- `base_path` - optional, defaults to `/etc/opendkim`. Gives a possibility to choose another location for configuration files.
+- `user_targets` - array, optional, allows to specify additional systemd targets that needs to be started before opendkim service. 
 Useful if database is used in configuration for instance. See examples bellow.
-`user_options` - array, optional, provides list of additional options for the opendkim. See examples bellow.
-`owner` - string, optional, defaults to `opendkim`. Allows to run opendkim service as another user.
-`group` - string, optional, defaults to `opendkim`. Allows to run opendkim service with different group, for instance `postfix`
-`databag_files` - optional, hash with keys and other additional files that needs to be fetched from (encrypted) databag or chef-vault.
+- `user_options` - array, optional, provides list of additional options for the opendkim. See examples bellow.
+- `owner` - string, optional, defaults to `opendkim`. Allows to run opendkim service as another user.
+- `group` - string, optional, defaults to `opendkim`. Allows to run opendkim service with different group, for instance `postfix`
+- `databag_files` - optional, hash with keys and other additional files that needs to be fetched from (encrypted) databag or chef-vault.
 Key of the hash is the path name of the file relative to `base_path`. The value is also hash with 2 essentional and 1 optional fields:
- - `databag` - name of the databag or vault
- - `item` - name of the item in databag or vault
- - `mode` - optional, defaults to `0640`, access mode for the file
-`config_files` - optional, hash with keys and other additional files which provided directly via attributes.
+  - `databag` - name of the databag or vault
+  - `item` - name of the item in databag or vault
+  - `mode` - optional, defaults to `0640`, access mode for the file
+- `config_files` - optional, hash with keys and other additional files which provided directly via attributes.
 Key of the hash is the path name of the file relative to `base_path`. The value can be string, array or hash of `key: value` pairs.
 String is directly placed to the file, array represents multiline file with each element is a separate file line, each hash pair
 will be placed to separate file line, key/value separator is space.
@@ -103,8 +103,8 @@ Note: the examples above are for demonstration of cookbook usage and do not pret
 
 ## Recipes
 There are only 2 recipes 
-`default` - the main one, which install the services accordingly to provided configuration
-`install` - called by default if no `opendkim` package is installed. Note that on RHEL and its derivates (CentOS, Amazonlinux) it also installs EPEL repo using `yum-epel` cookbook.
+- `default` - the main one, which install the services accordingly to provided configuration
+- `install` - called by default if no `opendkim` package is installed. Note that on RHEL and its derivates (CentOS, Amazonlinux) it also installs EPEL repo using `yum-epel` cookbook.
 
 
 ## Resources
