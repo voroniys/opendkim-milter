@@ -12,7 +12,29 @@ describe 'opendkim-milter::default' do
       # for a complete list of available platforms and versions see:
       # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
       runner = ChefSpec::ServerRunner.new(platform: 'ubuntu', version: '18.04') do |node|
-        node.normal['common']['install']['packages']['dummy'] = %w(unzip jq)
+        node.normal['opendkim-milter']['services']['opendkim'] = {
+          service_name: 'opendkim',
+          config: {
+            PidFile:          '/var/run/opendkim/opendkim.pid',
+            Mode:             'v',
+            Syslog:           'yes',
+            SyslogSuccess:    'yes',
+            LogWhy:           'yes',
+            UserID:           'opendkim:opendkim',
+            Socket:           'local:/var/run/opendkim/opendkim.sock',
+            Umask:            '007',
+            OversignHeaders:  'From',
+          },
+          config_files: {
+            TrustedHosts: %w(127.0.0.1 ::1),
+            KeyTable: {
+              '#default._domainkey.example.com': 'example.com:default:/etc/opendkim/keys/default.private',
+            },
+            SigningTable: {
+              '#*@example.com': 'default._domainkey.example.com',
+            },
+          },
+        }
       end
       runner.converge(described_recipe)
     end

@@ -7,6 +7,7 @@ property :user_targets, Array, desired_state: false, default: []
 property :user_options, Array, desired_state: false, default: []
 property :owner, String, desired_state: false, default: 'opendkim'
 property :group, String, desired_state: false, default: 'opendkim'
+property :databag_defaults, Hash, desired_state: false
 property :databag_files, Hash, desired_state: false
 property :config_files, Hash, desired_state: false
 
@@ -60,7 +61,7 @@ action :deploy do
     notifies :restart, "service[#{new_resource.service_name}]"
   end
   service new_resource.service_name do
-    action [ :enable, :start ]
+    action :enable
     subscribes :restart, "template[#{new_resource.service_name}_config]"
   end
   if property_is_set?(:databag_files)
@@ -72,14 +73,16 @@ action :deploy do
         group new_resource.group
         recursive true
       end
+      databag = pick('databag', prop)
+      item = pick('item', prop)
       file "#{new_resource.service_name}_#{file_path}" do
         path "#{new_resource.base_path}/#{file_path}"
-        if ChefVault::Item.vault?(prop['databag'], prop['item'])
-          content chef_vault_item(prop['databag'], prop['item'])
+        if ChefVault::Item.vault?(databag, item)
+          content chef_vault_item(databag, item)[pick('field', prop)]
         else
-          content data_bag_item(prop['databag'], prop['item'])
+          content data_bag_item(databag, item)[pick('field', prop)]
         end
-        mode prop.key?('mode') ? prop['mode'] : '0640'
+        mode pick('mode', prop)
         owner new_resource.owner
         group new_resource.group
         notifies :restart, "service[#{new_resource.service_name}]"
@@ -113,6 +116,24 @@ action :deploy do
         group new_resource.group
         notifies :restart, "service[#{new_resource.service_name}]"
       end
+    end
+  end
+  service "#{new_resource.service_name}_start" do
+    service_name new_resource.service_name
+    action :start
+  end
+end
+
+action_class do
+  def pick(name, prop)
+    if prop.key?(name)
+      prop[name]
+    elsif property_is_set?(:databag_defaults) && new_resource.databag_defaults.key?(name)
+      new_resource.databag_defaults[name]
+    elsif name == 'mode'
+      '0640'
+    else
+      Chef::Application.fatal!("Essential option '#{name}' is undefined neither in databags_default nor in databag_files", 2)
     end
   end
 end

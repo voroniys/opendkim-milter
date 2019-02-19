@@ -24,10 +24,13 @@ Useful if database is used in configuration for instance. See examples bellow.
 - `user_options` - array, optional, provides list of additional options for the opendkim. See examples bellow.
 - `owner` - string, optional, defaults to `opendkim`. Allows to run opendkim service as another user.
 - `group` - string, optional, defaults to `opendkim`. Allows to run opendkim service with different group, for instance `postfix`
+- `databag_defaults` - hash, optional. Contains the default values for `databag_files` items. It allows to specify common for all databag files
+parameters in one place only. See examples bellow.
 - `databag_files` - optional, hash with keys and other additional files that needs to be fetched from (encrypted) databag or chef-vault.
-Key of the hash is the path name of the file relative to `base_path`. The value is also hash with 2 essentional and 1 optional fields:
+Key of the hash is the path name of the file relative to `base_path`. The value is also hash with 3 essentional and 1 optional fields:
   - `databag` - name of the databag or vault
   - `item` - name of the item in databag or vault
+  - `field` - name of the field in databag item
   - `mode` - optional, defaults to `0640`, access mode for the file
 - `config_files` - optional, hash with keys and other additional files which provided directly via attributes.  
 Key of the hash is the path name of the file relative to `base_path`. The value can be string, array or hash of `key: value` pairs.
@@ -83,14 +86,18 @@ will be placed to separate file line, key/value separator is space.
             "*@test.com": "default._domainkey.test.com"
           }
         },
+        "databag_defaults": {
+          "databag": "dkimkeys",
+          "item": "example",
+          "field": "key",
+          "mode": "0660"
+        },
         "databag_files": {
           "keys/example.private": {
-            "databag": "dkimkeys",
-            "item": "example",
+            "field": "content",
             "mode": "0600"
           },
           "keys/test.private": {
-            "databag": "dkimkeys",
             "item": "test"
           }
         }

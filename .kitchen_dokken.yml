@@ -68,10 +68,65 @@ verifier:
 
 suites:
 - name: default
+  data_bags_path: "test/integration/data_bags"
   run_list:
     - recipe[opendkim-milter]
   verifier:
     inspec_tests:
     - test/integration/default
   attributes:
-
+    opendkim-milter:
+      services:
+        verifier:
+          base_path:       '/opt/dkim'
+          config:
+            PidFile:       '/var/run/opendkim/verifier.pid'
+            Mode:          'v'
+            Syslog:        'yes'
+            SyslogSuccess: 'yes'
+            LogWhy:        'yes'
+            UserID:        'opendkim:bin'
+            Socket:        'local:/var/run/opendkim/verifier.sock'
+            Umask:         '007'
+            OversignHeaders: 'From'
+          group: 'bin'
+          user_targets:
+            - 'mysql.target'
+        signer:
+          base_path:          '/opt/dkim'
+          config:
+            PidFile:          '/var/run/opendkim/signer.pid'
+            Mode:             's'
+            Syslog:           'yes'
+            SyslogSuccess:    'yes'
+            LogWhy:           'yes'
+            UserID:           'opendkim:bin'
+            Socket:           'local:/var/run/opendkim/signer.sock'
+            Umask:            '007'
+            OversignHeaders:  'From'
+            Canonicalization: 'relaxed/simple'
+            InternalHosts:    'refile:/opt/dkim/TrustedHosts'
+            KeyTable:         'refile:/opt/dkim/KeyTable'
+            SigningTable:     'refile:/opt/dkim/SigningTable'
+            SignatureAlgorithm: 'rsa-sha256'
+          group: 'bin'
+          config_files:
+            TrustedHosts:
+            - '127.0.0.1'
+            - '::1'
+            KeyTable:
+              default._domainkey.example.com: 'example.com:default:/etc/opendkim/keys/example.private'
+              default._domainkey.test.com: 'test.com:default:/etc/opendkim/keys/test.private'
+            SigningTable:
+              '*@example.com': 'default._domainkey.example.com'
+              '*@test.com': 'default._domainkey.test.com'
+          databag_defaults:
+            databag: 'dkimkeys'
+            item: 'example'
+            field: 'key'
+          databag_files:
+            keys/example.private:
+              field: 'content'
+              mode: '0600'
+            keys/test.private:
+              item: 'test'
