@@ -1,0 +1,26 @@
+# This file managed by Chef recipe opendkim-milter and any changes will be overwritten
+# If you are using OpenDKIM with SQL datasets it might be necessary to start OpenDKIM after the database servers.
+# For example, if using both MariaDB and PostgreSQL, change "After=" in the "[Unit]" section to:
+# After=network.target nss-lookup.target mariadb.service postgresql.service
+# by adding to role/environment attribute: node['opendkim-milter']['user_targets'] = %w(mariadb.service postgresql.service)
+
+[Unit]
+Description=DomainKeys Identified Mail (DKIM) Milter
+Documentation=man:opendkim(8) man:opendkim.conf(5) man:opendkim-genkey(8) man:opendkim-genzone(8) man:opendkim-testadsp(8) man:opendkim-testkey http://www.opendkim.org/docs.html
+After=network.target nss-lookup.target <% node['opendkim-milter']['os_targets'].each do |t| -%><%= t %><% end -%><% @user_targets.each do |t| -%><%= t %><% end -%>
+
+[Service]
+Type=forking
+PIDFile=<%= @pid_file %>
+<% if @umask -%>
+UMask=<%= @umask %>
+<% end -%>
+ExecStart=/usr/sbin/opendkim -x <%= @conf_file %> -P <%= @pid_file %><% @user_options.each do |o| -%> <%= o %><% end -%>
+Restart=on-failure
+ExecReload=/bin/kill -USR1 $MAINPID
+User=<%= @owner %>
+Group=<%= @group %>
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,35 @@
+sudo: required
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - chef-current-trusty
+    packages:
+      - chefdk
+
+services: docker
+
+env:
+  matrix:
+  - INSTANCE=default-centos-7
+  - INSTANCE=default-debian-8
+  - INSTANCE=default-fedora-27
+  - INSTANCE=default-ubuntu-1604
+  - INSTANCE=default-amazonlinux-2
+
+
+# Don't `bundle install`
+install: echo "skip bundle install"
+
+# Ensure we make ChefDK's Ruby the default
+before_script:
+  - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
+  - eval "$(/opt/chefdk/bin/chef shell-init bash)"
+  - /opt/chefdk/embedded/bin/chef gem install kitchen-dokken
+script:
+  - /opt/chefdk/embedded/bin/chef --version
+  - /opt/chefdk/embedded/bin/chef exec cookstyle
+  - /opt/chefdk/embedded/bin/chef exec foodcritic .
+  - /opt/chefdk/embedded/bin/chef exec rspec spec/
+  - /opt/chefdk/embedded/bin/chef exec kitchen verify ${INSTANCE}
