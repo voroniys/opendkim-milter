@@ -120,6 +120,8 @@ suites:
             SigningTable:
               '*@example.com': 'default._domainkey.example.com'
               '*@test.com': 'default._domainkey.test.com'
+          key_files:
+            keys/default.private: '---BIG SECRET---'
           databag_defaults:
             databag: 'dkimkeys'
             item: 'example'

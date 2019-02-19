@@ -36,6 +36,7 @@ Key of the hash is the path name of the file relative to `base_path`. The value 
 Key of the hash is the path name of the file relative to `base_path`. The value can be string, array or hash of `key: value` pairs.
 String is directly placed to the file, array represents multiline file with each element is a separate file line, each hash pair
 will be placed to separate file line, key/value separator is space.
+- `key_files` - fully similar to `config_files`, but deploys the files with access mode 400 instead of 640.
 
 #### Examples
 
@@ -85,6 +86,9 @@ will be placed to separate file line, key/value separator is space.
             "*@example.com": "default._domainkey.example.com",
             "*@test.com": "default._domainkey.test.com"
           }
+        },
+        "key_files": {
+          "keys/default.private": "file content as string, array or hash"
         },
         "databag_defaults": {
           "databag": "dkimkeys",
