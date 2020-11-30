@@ -12,10 +12,9 @@ services: docker
 
 env:
   matrix:
-  - INSTANCE=default-centos-7
-  - INSTANCE=default-debian-8
-  - INSTANCE=default-fedora-27
-  - INSTANCE=default-ubuntu-1604
+  - INSTANCE=default-debian-10
+  - INSTANCE=default-fedora-33
+  - INSTANCE=default-ubuntu-2004
   - INSTANCE=default-amazonlinux-2
 
 

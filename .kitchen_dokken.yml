@@ -4,7 +4,7 @@ settings:
 
 driver:
   name: dokken
-  chef_version: latest
+  chef_version: 16
   use_sudo: false
   privileged: true
 
@@ -15,40 +15,41 @@ provisioner:
   name: dokken
 
 platforms:
-- name: debian-8
+- name: debian-10
   driver:
-    image: dokken/debian-8
+    image: dokken/debian-10
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
 
-- name: centos-7
-  driver:
-    image: dokken/centos-7
-    platform: rhel
-    pid_one_command: /usr/lib/systemd/systemd
-    intermediate_instructions:
-      - RUN yum -y update
+# Centos can't start service in doken, well in Digital Ocean VPS
+# - name: centos-8
+#   driver:
+#     image: dokken/centos-8
+#     platform: rhel
+#     pid_one_command: /usr/lib/systemd/systemd
+# #    intermediate_instructions:
+# #      - RUN yum -y update
 
 - name: amazonlinux-2
   driver:
     image: dokken/amazonlinux-2
     platform: rhel
     pid_one_command: /usr/lib/systemd/systemd
-    intermediate_instructions:
-      - RUN yum -y update
+#    intermediate_instructions:
+#      - RUN yum -y update
 
-- name: fedora-27
+- name: fedora-33
   driver:
-    image: dokken/fedora-27
+    image: dokken/fedora-33
     platform: rhel
     pid_one_command: /usr/lib/systemd/systemd
     intermediate_instructions:
       - RUN dnf -y update
 
-- name: ubuntu-16.04
+- name: ubuntu-20.04
   driver:
-    image: dokken/ubuntu-16.04
+    image: dokken/ubuntu-20.04
     pid_one_command: /bin/systemd
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
@@ -56,12 +57,12 @@ platforms:
 # kitchen-docken does not work for ubuntu-18.04 because changes in systemd
 # https://github.com/moby/moby/issues/38749
 # testing with real VM in the cloud does not show this error
-# - name: ubuntu-18.04
-#   driver:
-#     image: dokken/ubuntu-18.04
-#     pid_one_command: /bin/systemd
-#     intermediate_instructions:
-#       - RUN /usr/bin/apt-get update
+- name: ubuntu-18.04
+  driver:
+    image: dokken/ubuntu-18.04
+    pid_one_command: /bin/systemd
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
 
 verifier:
   name: inspec

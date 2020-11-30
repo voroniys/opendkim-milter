@@ -2,10 +2,15 @@
 
 This file is used to list changes made in each version of the opendkim-milter cookbook.
 
-# 0.1.0
+# 1.0.9
 
 Initial release.
 
-- change 0
-- change 1
+- Add key_files property
 
+# 1.0.10
+
+- Add support for Chef 16
+- Refreshing test suite
+
+# 1.1.0

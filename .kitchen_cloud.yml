@@ -4,6 +4,9 @@ settings:
 
 provisioner:
   name: chef_zero
+  client_rb:
+    chef_license: accept
+
 
 driver:
   name: digitalocean
@@ -16,12 +19,12 @@ driver:
   user_data: |
     #cloud-config
     package_update: true
+
 platforms:
-  - name: ubuntu-16-04-x64
+  - name: ubuntu-20-04-x64
   - name: ubuntu-18-04-x64
-  - name: centos-7
-  - name: fedora-27
-  - name: fedora-28
+  - name: centos-8
+  - name: fedora-32
 
 verifier:
   name: inspec

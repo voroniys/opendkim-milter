@@ -1,4 +1,5 @@
 resource_name :opendkim_milter
+provides :opendkim_milter
 
 property :service_name, String, name_property: true
 property :base_path, String, desired_state: false, default: '/etc/opendkim'
