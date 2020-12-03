@@ -4,7 +4,7 @@ dist: focal
 addons:
   apt:
     sources:
-      - chef-current-trusty
+      - chef-current-focal
     packages:
       - chefdk
 
