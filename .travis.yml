@@ -1,10 +1,10 @@
 sudo: required
-dist: focal
+dist: bionic
 
 addons:
   apt:
     sources:
-      - chef-current-focal
+      - chef-current-bionic
     packages:
       - chefdk
 
