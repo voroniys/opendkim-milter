@@ -38,7 +38,7 @@ action :deploy do
     variables(
       conf_file: "#{new_resource.base_path}/#{new_resource.service_name}.conf",
       pid_file: pid_file,
-      user_targets:  new_resource.user_targets,
+      user_targets: new_resource.user_targets,
       user_options: new_resource.user_options,
       umask: new_resource.config['Umask'],
       owner: new_resource.owner,
