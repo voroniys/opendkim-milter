@@ -31,6 +31,5 @@ before_script:
 script:
   - /opt/chefdk/embedded/bin/chef --version
   - /opt/chefdk/embedded/bin/chef exec cookstyle
-  - /opt/chefdk/embedded/bin/chef exec foodcritic .
   - /opt/chefdk/embedded/bin/chef exec rspec spec/
   - /opt/chefdk/embedded/bin/chef exec kitchen verify ${INSTANCE}
