@@ -11,6 +11,8 @@ addons:
 services: docker
 
 env:
+  global:
+  - CHEF_LICENSE=accept
   matrix:
   - INSTANCE=default-debian-10
   - INSTANCE=default-fedora-33
@@ -24,7 +26,7 @@ install: echo "skip bundle install"
 # Ensure we make ChefDK's Ruby the default
 before_script:
   - sudo iptables -L DOCKER || ( echo "DOCKER iptables chain missing" ; sudo iptables -N DOCKER )
-  - eval "$(/opt/chefdk/bin/chef shell-init bash --chef-license accept)"
+  - eval "$(/opt/chefdk/bin/chef shell-init bash)"
   - /opt/chefdk/embedded/bin/chef gem install kitchen-dokken
 script:
   - /opt/chefdk/embedded/bin/chef --version
